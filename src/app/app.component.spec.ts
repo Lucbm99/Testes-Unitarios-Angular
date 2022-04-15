@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
+  //antes de iniciar os testes, realiza essa verificação
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -12,6 +13,7 @@ describe('AppComponent', () => {
         AppComponent
       ],
     }).compileComponents();
+    //compilação dos componentes
   });
 
   it('should create the app', () => {
@@ -32,4 +34,12 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.content span')?.textContent).toContain('teste-unitario app is running!');
   });
+
+  //test with false positive
+  it(`Testing function sum() with wrong value`, () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.soma(1, 2)).not.toEqual(2)
+  });
+
 });
