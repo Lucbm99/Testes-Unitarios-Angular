@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 //Interface
-import { Investiments } from '../model/investiments';
+import { Investiments } from '../../model/investiments';
 
 @Component({
   selector: 'app-list',
