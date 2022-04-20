@@ -7,6 +7,7 @@ import {
 } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
 import { Investiments } from '../model/investiments';
+import { MOCK_LIST } from './list-investiments.mock';
 
 describe('ListInvestimentsService', () => {
   let service: ListInvestimentsService;
@@ -15,43 +16,43 @@ describe('ListInvestimentsService', () => {
 
   const baseURL: string = 'https://raw.githubusercontent.com/troquatte/fake-server/main/investiments-all.json';
 
-  const mockList: Array<Investiments> = [
-    {
-      name: 'Banco 1',
-      value: 100
-    },
-    {
-      name: 'Banco 2',
-      value: 100
-    },
-    {
-      name: 'Banco 3',
-      value: 100
-    },
-    {
-      name: 'Banco 4',
-      value: 100
-    },
-    {
-      name: 'Banco 5',
-      value: 100
-    },
-  ]
+  const mockList: Array<Investiments> = MOCK_LIST;
+  
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule]
     });
+    
+    httpClient = TestBed.inject(HttpClient);
+    httpTestingController = TestBed.inject(HttpTestingController);  
     service = TestBed.inject(ListInvestimentsService);
   });
 
-  httpClient = TestBed.inject(HttpClient);
-  httpTestingController = TestBed.inject(HttpTestingController);
-  
+
   afterEach(() => {
     httpTestingController.verify()
   })
   
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('(U) should be list all investiments', (done) => {
+    //done -> encerra as validações em testes unitários, caso chegue até aqui
+    service.list().subscribe(
+      (res: Array<Investiments>) => {
+        expect(res[0].name).toEqual('Banco 1');
+        expect(res[0].value).toEqual(100);
+        
+        expect(res[4].name).toEqual('Banco 5');
+        expect(res[4].value).toEqual(100);
+
+        done();
+      });
+
+      const req = httpTestingController.expectOne(baseURL);
+      req.flush(mockList);
+
+      expect(req.request.method).toEqual('GET')
   });
 });
